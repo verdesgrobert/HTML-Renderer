@@ -336,6 +336,11 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         /// </summary>
         private void OnLinkClicked(object sender, RoutedEvenArgs<HtmlLinkClickedEventArgs> args)
         {
+            if (args.Data.Link == "SayHellooo")
+            {
+                _htmlPanel.ScrollToElement("bottomList");
+                args.Data.Handled = true;
+            }
             if (args.Data.Link == "SayHello")
             {
                 MessageBox.Show("Hello you!");
@@ -375,5 +380,12 @@ namespace TheArtOfDev.HtmlRenderer.Demo.WPF
         }
 
         #endregion
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            var parent = btn.Parent;
+
+        }
     }
 }

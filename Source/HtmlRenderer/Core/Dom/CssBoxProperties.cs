@@ -27,7 +27,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
     /// Has additional fields to control the location and size of the box and 'actual' css values for some properties
     /// that require additional calculations and parsing.<br/>
     /// </summary>
-    internal abstract class CssBoxProperties
+    public abstract class CssBoxProperties
     {
         #region CSS Fields
 

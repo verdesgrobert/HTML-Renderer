@@ -18,6 +18,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core;
+using TheArtOfDev.HtmlRenderer.Core.Dom;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Parse;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
@@ -340,6 +341,19 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         public Rect? GetElementRectangle(string elementId)
         {
             var r = _htmlContainerInt.GetElementRectangle(elementId);
+            return r.HasValue ? Utils.Convert(r.Value) : (Rect?)null;
+        }
+        /// <summary>
+        /// Get the Rect of html element as calculated by html layout.<br/>
+        /// Element if found by id (id attribute on the html element).<br/>
+        /// Note: to get the screen Rect you need to adjust by the hosting control.<br/>
+        /// </summary>
+        /// <param name="elementId">the id of the element to get its Rect</param>
+        /// <returns>the Rect of the element or null if not found</returns>
+        public Rect? GetElementRectangle(string elementId, out List<string> elementsIds, out CssBox box)
+        {
+            elementsIds = new List<string>();
+            var r = _htmlContainerInt.GetElementRectangle(elementId, out elementsIds, out box);
             return r.HasValue ? Utils.Convert(r.Value) : (Rect?)null;
         }
 

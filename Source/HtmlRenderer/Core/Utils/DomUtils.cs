@@ -299,7 +299,34 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
                         return foundBox;
                 }
             }
+            return null;
+        }
+        /// <summary>
+        /// Get css box under the given sub-tree with the given id.<br/>
+        /// </summary>
+        /// <param name="box">the box to start search from</param>
+        /// <param name="id">the id to find the box by</param>
+        /// <returns>css box if exists or null</returns>
+        public static CssBox GetBoxById(CssBox box, string id, ref List<string> elementsIds)
+        {
 
+            if (box != null && !string.IsNullOrEmpty(id))
+            {
+                if (box.HtmlTag != null)
+                    if (!string.IsNullOrEmpty(box.HtmlTag.TryGetAttribute("id", string.Empty)))
+                        elementsIds.Add(box.HtmlTag.TryGetAttribute("id"));
+                if (box.HtmlTag != null && id.Equals(box.HtmlTag.TryGetAttribute("id"), StringComparison.OrdinalIgnoreCase))
+                {
+                    return box;
+                }
+
+                foreach (var childBox in box.Boxes)
+                {
+                    var foundBox = GetBoxById(childBox, id, ref elementsIds);
+                    if (foundBox != null)
+                        return foundBox;
+                }
+            }
             return null;
         }
 

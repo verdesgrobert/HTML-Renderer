@@ -29,7 +29,10 @@
                 <wpf1:HtmlPanel x:Name="_htmlPanel" Grid.Column="0">
                     <wpf1:HtmlPanel.ToolTip>
                         <ToolTip BorderBrush="Transparent" Padding="0">
-                            <wpf1:HtmlLabel x:Name="_htmlTooltipLabel"/>
+                            <StackPanel>
+                                <wpf1:HtmlLabel x:Name="_htmlTooltipLabel"/>
+                                <Button Content="Get Source" Click="Button_Click"/>
+                            </StackPanel>
                         </ToolTip>
                     </wpf1:HtmlPanel.ToolTip>
                 </wpf1:HtmlPanel>

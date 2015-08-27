@@ -539,6 +539,23 @@ namespace TheArtOfDev.HtmlRenderer.Core
             var box = DomUtils.GetBoxById(_root, elementId.ToLower());
             return box != null ? CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds) : (RRect?)null;
         }
+        /// <summary>
+        /// Get the rectangle of html element as calculated by html layout.<br/>
+        /// Element if found by id (id attribute on the html element).<br/>
+        /// Note: to get the screen rectangle you need to adjust by the hosting control.<br/>
+        /// </summary>
+        /// <param name="elementId">the id of the element to get its rectangle</param>
+        /// <returns>the rectangle of the element or null if not found</returns>
+        public RRect? GetElementRectangle(string elementId, out List<string> elementsIds, out CssBox box)
+        {
+            elementsIds = new List<string>();
+            ArgChecker.AssertArgNotNullOrEmpty(elementId, "elementId");
+
+            box = DomUtils.GetBoxById(_root, elementId.ToLower(), ref elementsIds);
+
+            return box != null ? CommonUtils.GetFirstValueOrDefault(box.Rectangles, box.Bounds) : (RRect?)null;
+        }
+
 
         /// <summary>
         /// Measures the bounds of box and children, recursively.

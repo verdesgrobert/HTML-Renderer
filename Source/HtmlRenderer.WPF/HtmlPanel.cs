@@ -10,11 +10,15 @@
 // - Sun Tsu,
 // "The Art of War"
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using TheArtOfDev.HtmlRenderer.Core.Dom;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Utils;
 
@@ -95,7 +99,68 @@ namespace TheArtOfDev.HtmlRenderer.WPF
                 }
             }
         }
+        /// <summary>
+        /// Adjust the scrollbar of the panel on html element by the given id.<br/>
+        /// The top of the html element rectangle will be at the top of the panel, if there
+        /// is not enough height to scroll to the top the scroll will be at maximum.<br/>
+        /// </summary>
+        /// <param name="elementId">the id of the element to scroll to</param>
+        public virtual void ScrollToElement(string elementId, out string result, out List<string> availableIds)
+        {
+            availableIds = new List<string>();
+            result = "_htmlContainer is null";
+            ArgChecker.AssertArgNotNullOrEmpty(elementId, "elementId");
 
+            if (_htmlContainer != null)
+            {
+                result = "id not found";
+                CssBox box = null;
+                var rect = _htmlContainer.GetElementRectangle(elementId, out availableIds, out box);
+                if (rect.HasValue)
+                {
+                    result = "";//Scrolled to " + rect.Value.Location.X + ":" + rect.Value.Location.Y;
+                    Dispatcher.Invoke(new Action(() =>
+                    {
+                        ScrollToPoint(rect.Value.Location.X, Math.Max(rect.Value.Location.Y - 50, 0));
+                        box.BorderLeftColor = "red";
+                        box.BorderLeftStyle = "solid";
+                        box.BorderLeftWidth = "2px";
+                        box.PaddingLeft = "3px";
+                        System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+                        t.Interval = 300;
+                        this.InvalidateVisual();
+                        int counter = 0;
+                        t.Tick += (sen, ev) =>
+                        {
+                            if (counter == 6)
+                            {
+                                t.Stop();
+                                box.BorderLeftColor = "black";
+                                box.BorderLeftStyle = "none";
+                                box.BorderLeftWidth = "0";
+                                box.PaddingLeft = "0";
+                            }
+                            if (counter % 2 == 0)
+                                box.BorderLeftWidth = "2px";
+                            else
+                                box.BorderLeftWidth = "0px";
+                            this.InvalidateVisual();
+                            counter++;
+                        };
+                        t.Start();
+                        _htmlContainer.HandleMouseMove(this, Mouse.GetPosition(this));
+                    }));
+                }
+            }
+        }
+        public virtual void ScrollToTop()
+        {
+            if (_htmlContainer != null)
+            {
+                ScrollToPoint(0, 0);
+                _htmlContainer.HandleMouseMove(this, Mouse.GetPosition(this));
+            }
+        }
 
         #region Private methods
 

@@ -32,7 +32,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
     /// To know more about boxes visit CSS spec:
     /// http://www.w3.org/TR/CSS21/box.html
     /// </remarks>
-    internal class CssBox : CssBoxProperties, IDisposable
+    public class CssBox : CssBoxProperties, IDisposable
     {
         #region Fields and Consts
 
