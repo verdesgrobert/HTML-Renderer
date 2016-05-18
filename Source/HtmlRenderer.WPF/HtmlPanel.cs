@@ -47,6 +47,8 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         /// </summary>
         protected ScrollBar _horizontalScrollBar;
 
+        public event ScrollEventHandler Scrolled;
+
         #endregion
 
 
@@ -398,6 +400,15 @@ namespace TheArtOfDev.HtmlRenderer.WPF
             _verticalScrollBar.Value = y;
             UpdateScrollOffsets();
         }
+        /// <summary>
+        /// Set the control scroll offset to the given values.
+        /// </summary>
+        public void ScrollVertically(double p)
+        {
+            if (_verticalScrollBar.Value == p) return;
+            _verticalScrollBar.Value = p;
+            UpdateScrollOffsets();
+        }
 
         /// <summary>
         /// On scrollbar scroll update the scroll offsets and invalidate.
@@ -405,6 +416,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
         private void OnScrollBarScroll(object sender, ScrollEventArgs e)
         {
             UpdateScrollOffsets();
+            Scrolled?.Invoke(sender, e);
         }
 
         /// <summary>
@@ -415,6 +427,7 @@ namespace TheArtOfDev.HtmlRenderer.WPF
             var newScrollOffset = new Point(-_horizontalScrollBar.Value, -_verticalScrollBar.Value);
             if (!newScrollOffset.Equals(_htmlContainer.ScrollOffset))
             {
+                var oldValue = _htmlContainer.ScrollOffset;
                 _htmlContainer.ScrollOffset = newScrollOffset;
                 InvalidateVisual();
             }
